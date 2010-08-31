@@ -28,6 +28,7 @@ require 'json'
 # Engineyard gem
 $LOAD_PATH.unshift(File.join(EY_ROOT, "lib"))
 require 'engineyard'
+EY::Error # Autoload hax
 
 # Spec stuff
 require 'spec/autorun'
