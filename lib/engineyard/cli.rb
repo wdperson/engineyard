@@ -47,8 +47,9 @@ module EY
     method_option :verbose, :type => :boolean, :aliases => %w(-v),
       :desc => "Be verbose"
     def deploy
-      app         = fetch_app(options[:app])
-      environment = fetch_environment(options[:environment], app)
+      app_deployment = fetch_app_deployment(options[:app], options[:environment])
+      app = app_deployment.app
+      environment = app_deployment.environment
       environment.ignore_bad_master = options[:ignore_bad_master]
       deploy_ref  = if options[:app]
                       environment.resolve_branch(options[:ref], options[:ignore_default_branch]) ||

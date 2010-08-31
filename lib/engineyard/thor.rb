@@ -41,12 +41,12 @@ module EY
       raise EY::AmbiguousEnvironmentGitUriError.new(api.environments)
     end
 
-    def fetch_app(app_name = nil)
-      if app_name
-        api.apps.match_one!(app_name)
-      else
-        api.app_for_repo!(repo)
-      end
+    def fetch_app_deployment(app_name = nil, environment_name = nil)
+      api.app_deployments
+      EY::Model::AppDeployment.match_one!(:app_name => app_name,
+                                          :environment_name => environment_name,
+                                          :repo => repo.urls.first,
+                                          :api => api)
     end
 
     def get_apps(all_apps = false)

@@ -30,6 +30,18 @@ module EY
       @apps ||= EY::Model::App.from_array(request('/apps')["apps"], :api => self)
     end
 
+    def app_deployments
+      @app_deployments ||= apps.each do |app|
+        app.environments.each do |environment|
+          EY::Model::AppDeployment.from_hash(:id => app.id * environment.id, 
+                                             :app_name => app.name,
+                                             :repo => app.repository_uri,
+                                             :environment_name => environment.name,
+                                             :api => self)
+        end
+      end
+    end
+
     def apps_for_repo(repo)
       apps.find_all {|a| repo.urls.include?(a.repository_uri) }
     end
