@@ -14,6 +14,8 @@ module EY
           filter_candidates(:app_name, options, candidates)
         elsif options[:repo]
           candidates.select {|c| options[:repo].urls.include?(c.repository_uri) }
+        else
+          candidates
         end
 
         environment_candidates = filter_candidates(:environment_name, options, candidates)
