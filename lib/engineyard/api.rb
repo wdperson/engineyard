@@ -35,7 +35,7 @@ module EY
         app.environments.each do |environment|
           EY::Model::AppDeployment.from_hash(:id => app.id * environment.id, 
                                              :app_name => app.name,
-                                             :repo => app.repository_uri,
+                                             :repository_uri => app.repository_uri,
                                              :environment_name => environment.name,
                                              :api => self)
         end

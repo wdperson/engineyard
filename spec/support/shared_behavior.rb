@@ -75,7 +75,7 @@ shared_examples_for "it takes an environment name" do
 
     it "complains when the substring is ambiguous" do
       run_ey({:env => 'staging'}, {:expect_failure => true})
-      @err.should match(/'staging' is ambiguous/)
+      @err.should match(/multiple app deployments possible/i)
     end
 
     it "works when the substring is unambiguous" do
@@ -93,7 +93,7 @@ shared_examples_for "it takes an environment name" do
   it "complains when it can't guess the environment and its name isn't specified" do
     api_scenario "one app, one environment, not linked"
     run_ey({:env => nil}, {:expect_failure => true})
-    @err.should =~ /single environment/i
+    @err.should match(/there is no application configured/i)
   end
 end
 

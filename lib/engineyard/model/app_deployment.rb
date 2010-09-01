@@ -1,6 +1,6 @@
 module EY
   module Model
-    class AppDeployment < ApiStruct.new(:id, :environment_name, :app_name, :repo, :account, :api)
+    class AppDeployment < ApiStruct.new(:id, :environment_name, :app_name, :repository_uri, :account, :api)
       @@app_deployments = {}
 
       def self.match_one!(options)
@@ -10,20 +10,24 @@ module EY
 
         candidates = filter_candidates(:account, options, candidates)
 
-        app_candidates =if options[:app_name]
+        app_candidates = if options[:app_name]
           filter_candidates(:app_name, options, candidates)
         elsif options[:repo]
-          candidates.select {|c| c.repo == options[:repo] }
+          candidates.select {|c| options[:repo].urls.include?(c.repository_uri) }
         end
 
         environment_candidates = filter_candidates(:environment_name, options, candidates)
         candidates = app_candidates & environment_candidates
 
         if candidates.empty?
-          if environment_candidates.empty?
-            message = "Could not find any matching environments."
-          elsif app_candidates.empty?
-            message = "Could not find any matching applications."
+          if app_candidates.empty?
+            if options[:app_name]
+              raise InvalidAppError.new(options[:app_name])
+            else
+              raise NoAppError.new(options[:repo])
+            end
+          elsif environment_candidates.empty?
+            raise NoEnvironmentError.new(options[:environment_name])
           else
             message = "The matched apps & environments do not correspond with each other.\n"
             message << "Applications:\n"

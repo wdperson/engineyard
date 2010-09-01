@@ -59,13 +59,13 @@ describe "ey deploy" do
     it "complains when the specified environment does not contain the app" do
       api_scenario "one app, one environment, not linked"
       ey "deploy -e giblets -r master", :expect_failure => true
-      @err.should match(/does not run this application/i)
+      @err.should match(/there is no application configured/i)
     end
 
     it "complains when environment is not specified and app is in >1 environment" do
       api_scenario "one app, many environments"
       ey "deploy", :expect_failure => true
-      @err.should match(/single environment.*2/i)
+      @err.should match(/multiple app deployments possible/i)
     end
 
     it "complains when the app master is in a non-running state" do

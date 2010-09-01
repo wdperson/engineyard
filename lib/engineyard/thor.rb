@@ -45,7 +45,7 @@ module EY
       api.app_deployments
       EY::Model::AppDeployment.match_one!(:app_name => app_name,
                                           :environment_name => environment_name,
-                                          :repo => repo.urls.first,
+                                          :repo => repo,
                                           :api => api)
     end
 
